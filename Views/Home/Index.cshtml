@@ -1,0 +1,29 @@
+@model IReadOnlyList<TopMovies.Models.Movie>
+@{
+    ViewData["Title"] = "Кращі фільми";
+}
+
+<section class="hero">
+    <h1>Топ фільмів</h1>
+    <p>Добірка стрічок, які варто подивитися хоча б раз у житті</p>
+</section>
+
+<div class="movie-grid">
+    @foreach (var movie in Model)
+    {
+        <article class="movie-card">
+            <div class="poster-wrap">
+                <img src="@movie.PosterPath" alt="Постер: @movie.Title" class="poster" />
+                <span class="year-badge">@movie.ReleaseYear</span>
+            </div>
+            <div class="movie-info">
+                <h2 class="movie-title">@movie.Title</h2>
+                <p class="movie-meta">
+                    <span class="genre">@movie.Genre</span>
+                </p>
+                <p class="movie-director"><strong>Режисер:</strong> @movie.Director</p>
+                <p class="movie-description">@movie.Description</p>
+            </div>
+        </article>
+    }
+</div>
