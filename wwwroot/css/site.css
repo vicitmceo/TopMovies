@@ -393,17 +393,82 @@ footer.footer a {
   border-color: #f5c518;
 }
 
+.form-input.input-validation-error {
+  border-color: #ff5c5c;
+  background: rgba(255, 92, 92, 0.06);
+}
+
 .field-error {
   color: #ff5c5c;
   font-size: 0.82rem;
-  display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.4rem;
+  align-items: flex-start;
+  gap: 0.35rem;
+  line-height: 1.35;
 }
 
-.validation-summary ul {
-  color: #ff5c5c;
-  margin-bottom: 1rem;
-  padding-left: 1.2rem;
+.field-error:empty {
+  display: none;
+}
+
+.field-error:not(:empty) {
+  display: flex;
+  animation: field-error-in 0.22s ease-out;
+}
+
+.field-error:not(:empty)::before {
+  content: "\26A0";
+  flex: none;
+  line-height: 1.2;
+}
+
+.validation-summary-valid {
+  display: none;
+}
+
+.validation-summary.validation-summary-errors {
+  display: block;
+  background: rgba(255, 92, 92, 0.1);
+  border: 1px solid rgba(255, 92, 92, 0.35);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem 0.9rem 1.6rem;
+  margin-bottom: 1.2rem;
+  animation: field-error-in 0.25s ease-out;
+}
+
+.validation-summary-errors ul {
+  color: #ff6b6b;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.validation-summary-errors li {
+  position: relative;
+  padding-left: 1.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.validation-summary-errors li:last-child {
+  margin-bottom: 0;
+}
+
+.validation-summary-errors li::before {
+  content: "\26A0";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+@keyframes field-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-actions {

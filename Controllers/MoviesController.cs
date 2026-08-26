@@ -41,8 +41,6 @@ public class MoviesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Title,Director,Genre,ReleaseYear,PosterPath,Description,PosterFile")] Movie movie)
     {
-        ValidatePoster(movie);
-
         if (!ModelState.IsValid) return View(movie);
 
         if (movie.PosterFile is not null)
@@ -70,8 +68,6 @@ public class MoviesController : Controller
     public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Director,Genre,ReleaseYear,PosterPath,Description,PosterFile")] Movie movie)
     {
         if (id != movie.Id) return NotFound();
-
-        ValidatePoster(movie);
 
         if (!ModelState.IsValid) return View(movie);
 
@@ -116,16 +112,6 @@ public class MoviesController : Controller
         }
 
         return RedirectToAction(nameof(Index));
-    }
-
-    private void ValidatePoster(Movie movie)
-    {
-        ModelState.Remove(nameof(Movie.PosterFile));
-
-        if (movie.PosterFile is null && string.IsNullOrWhiteSpace(movie.PosterPath))
-        {
-            ModelState.AddModelError(nameof(Movie.PosterPath), "Завантажте файл постера або вкажіть шлях до зображення");
-        }
     }
 
     private async Task<string> SavePosterFileAsync(IFormFile file)

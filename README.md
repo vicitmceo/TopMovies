@@ -34,9 +34,35 @@
 файл зображення (`PosterFile`, зберігається у
 `wwwroot/images/posters/uploads/`), або вказати шлях/URL вручну.
 
-**Валідація:** атрибути `[Required]`, `[StringLength]`, `[Range]` на моделі
-`Movie` + клієнтська валідація через jQuery Unobtrusive Validation; постер
-обов'язковий (файл або шлях) — перевіряється в контролері.
+## Валідація
+
+Валідація працює одночасно на сервері (DataAnnotations, перевіряється в
+`ModelState.IsValid` перед збереженням) та на клієнті (jQuery Validate +
+Unobtrusive Validation, підключені через `_ValidationScriptsPartial`).
+
+**Вбудовані атрибути Data Annotations:** `[Required]`, `[StringLength]` (з
+`MinimumLength`), `[Range]` — на властивостях `Movie` (`Models/Movie.cs`).
+
+**Власні (кастомні) атрибути валідації** (`Validation/`):
+
+- `NotFutureYearAttribute` — рік випуску не може бути пізніше поточного
+  року. Реалізує `IClientModelValidator`, тому працює й на клієнті через
+  власний jQuery-адаптер (`wwwroot/js/custom-validation.js`, метод
+  `notfutureyear`), без перезавантаження сторінки
+- `PosterRequiredAttribute` — крос-польова перевірка: постер обов'язковий,
+  але допускається або завантажений файл (`PosterFile`), або текстовий шлях
+  (`PosterPath`). Теж реалізує `IClientModelValidator` (адаптер
+  `posterrequired`), що ревалідується при виборі файлу
+
+**Тег-хелпери:** `asp-validation-for` (Validation Message Tag Helper) під
+кожним полем і `asp-validation-summary="ModelOnly"` (Validation Summary Tag
+Helper) над формою.
+
+**Стилізація помилок** (`wwwroot/css/site.css`): червоний колір тексту та
+рамки поля (`.input-validation-error`), іконка попередження (⚠) перед
+повідомленням, плавна fade/slide-in анімація появи (`@keyframes
+field-error-in`), стилізований блок `validation-summary-errors` з рамкою та
+списком; порожній summary (`validation-summary-valid`) прихований.
 
 **404-сторінка:** `UseStatusCodePagesWithReExecute` перенаправляє на
 `/Home/NotFoundPage` для неіснуючих розділів/фільмів.
@@ -60,6 +86,8 @@ dotnet run
 ## Структура
 
 - `Models/Movie.cs` — модель фільму з валідацією (Entity Framework сутність)
+- `Validation/` — кастомні атрибути валідації (`NotFutureYearAttribute`, `PosterRequiredAttribute`)
+- `wwwroot/js/custom-validation.js` — клієнтські jQuery-адаптери для кастомних атрибутів
 - `Data/MovieDbContext.cs` — DbContext, seed-дані через `HasData`
 - `Migrations/` — EF Core міграції
 - `Controllers/HomeController.cs` — головна сторінка (сітка фільмів)
@@ -83,3 +111,5 @@ dotnet run
 ![Форма додавання фільму](screenshots/crud-create.png)
 
 ![Сторінка 404](screenshots/crud-notfound.png)
+
+![Стилізовані повідомлення валідації](screenshots/validation-errors.png)
