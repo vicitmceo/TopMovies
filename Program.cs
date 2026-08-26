@@ -21,6 +21,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+app.UseStatusCodePagesWithReExecute("/Home/NotFoundPage", "?code={0}");
 app.UseRouting();
 
 app.UseAuthorization();

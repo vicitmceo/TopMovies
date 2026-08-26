@@ -1,0 +1,29 @@
+@model TopMovies.Models.Movie
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="details-page">
+    <div class="details-poster">
+        <img src="@Model.PosterPath" alt="Постер: @Model.Title" />
+    </div>
+    <div class="details-info">
+        <h1>@Model.Title</h1>
+        <span class="genre">@Model.Genre</span>
+
+        <dl class="details-facts">
+            <dt>Рік випуску</dt>
+            <dd>@Model.ReleaseYear</dd>
+            <dt>Режисер</dt>
+            <dd>@Model.Director</dd>
+        </dl>
+
+        <p class="details-description">@Model.Description</p>
+
+        <div class="details-actions">
+            <a class="btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Редагувати</a>
+            <a class="btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Видалити</a>
+            <a class="btn-ghost" asp-action="Index">До списку</a>
+        </div>
+    </div>
+</div>

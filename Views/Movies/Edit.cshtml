@@ -1,0 +1,68 @@
+@model TopMovies.Models.Movie
+@{
+    ViewData["Title"] = "Редагувати фільм";
+}
+
+<div class="form-page">
+    <h1>Редагувати фільм</h1>
+
+    <form asp-action="Edit" enctype="multipart/form-data" class="movie-form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-input" />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Director"></label>
+            <input asp-for="Director" class="form-input" />
+            <span asp-validation-for="Director" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Genre"></label>
+            <input asp-for="Genre" class="form-input" />
+            <span asp-validation-for="Genre" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ReleaseYear"></label>
+            <input asp-for="ReleaseYear" class="form-input" />
+            <span asp-validation-for="ReleaseYear" class="field-error"></span>
+        </div>
+
+        <div class="form-group poster-preview-group">
+            <label>Поточний постер</label>
+            <img src="@Model.PosterPath" alt="Поточний постер" class="admin-thumb" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PosterFile">Замінити файлом (необов'язково)</label>
+            <input asp-for="PosterFile" class="form-input" type="file" accept="image/*" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PosterPath">Або шлях/URL до зображення</label>
+            <input asp-for="PosterPath" class="form-input" />
+            <span asp-validation-for="PosterPath" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-input" rows="4"></textarea>
+            <span asp-validation-for="Description" class="field-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Зберегти зміни</button>
+            <a asp-action="Index" class="btn-ghost">Скасувати</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

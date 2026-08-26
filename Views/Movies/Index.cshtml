@@ -1,0 +1,41 @@
+@model IReadOnlyList<TopMovies.Models.Movie>
+@{
+    ViewData["Title"] = "Керування фільмами";
+}
+
+<section class="admin-header">
+    <h1>Керування фільмами</h1>
+    <a class="btn-primary" asp-action="Create">+ Додати фільм</a>
+</section>
+
+<div class="admin-table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Постер</th>
+                <th>Назва</th>
+                <th>Режисер</th>
+                <th>Жанр</th>
+                <th>Рік</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td><img src="@movie.PosterPath" alt="Постер: @movie.Title" class="admin-thumb" /></td>
+                    <td>@movie.Title</td>
+                    <td>@movie.Director</td>
+                    <td>@movie.Genre</td>
+                    <td>@movie.ReleaseYear</td>
+                    <td class="admin-actions">
+                        <a asp-action="Details" asp-route-id="@movie.Id">Деталі</a>
+                        <a asp-action="Edit" asp-route-id="@movie.Id">Редагувати</a>
+                        <a asp-action="Delete" asp-route-id="@movie.Id" class="danger">Видалити</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

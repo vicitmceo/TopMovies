@@ -6,16 +6,17 @@
 <section class="hero">
     <h1>Топ фільмів</h1>
     <p>Добірка стрічок, які варто подивитися хоча б раз у житті</p>
+    <a class="manage-link" asp-controller="Movies" asp-action="Index">Керувати списком фільмів</a>
 </section>
 
 <div class="movie-grid">
     @foreach (var movie in Model)
     {
         <article class="movie-card">
-            <div class="poster-wrap">
+            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="poster-wrap">
                 <img src="@movie.PosterPath" alt="Постер: @movie.Title" class="poster" />
                 <span class="year-badge">@movie.ReleaseYear</span>
-            </div>
+            </a>
             <div class="movie-info">
                 <h2 class="movie-title">@movie.Title</h2>
                 <p class="movie-meta">

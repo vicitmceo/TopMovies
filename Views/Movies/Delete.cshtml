@@ -1,0 +1,23 @@
+@model TopMovies.Models.Movie
+@{
+    ViewData["Title"] = "Видалити фільм";
+}
+
+<div class="form-page">
+    <h1>Видалити фільм</h1>
+    <p class="delete-warning">Ви впевнені, що хочете видалити цей фільм? Дію неможливо скасувати.</p>
+
+    <div class="delete-preview">
+        <img src="@Model.PosterPath" alt="Постер: @Model.Title" class="admin-thumb" />
+        <div>
+            <h2>@Model.Title</h2>
+            <p>@Model.Director · @Model.ReleaseYear · @Model.Genre</p>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post" class="form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn-danger">Так, видалити</button>
+        <a asp-action="Index" class="btn-ghost">Скасувати</a>
+    </form>
+</div>
