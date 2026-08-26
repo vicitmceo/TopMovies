@@ -1,24 +1,25 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TopMovies.Data;
 using TopMovies.Models;
-using TopMovies.Services;
 
 namespace TopMovies.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly MovieRepository _movieRepository;
+    private readonly MovieDbContext _db;
 
-    public HomeController(ILogger<HomeController> logger, MovieRepository movieRepository)
+    public HomeController(ILogger<HomeController> logger, MovieDbContext db)
     {
         _logger = logger;
-        _movieRepository = movieRepository;
+        _db = db;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var movies = _movieRepository.GetAll();
+        var movies = await _db.Movies.AsNoTracking().OrderBy(m => m.Id).ToListAsync();
         return View(movies);
     }
 
