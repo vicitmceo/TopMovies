@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TopMovies.Data;
+using TopMovies.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddControllersWithViews(options =>
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieDb")));
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 

@@ -1,24 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TopMovies.Data;
 using TopMovies.Models;
+using TopMovies.Services;
 
 namespace TopMovies.Controllers;
 
 public class MoviesController : Controller
 {
-    private readonly MovieDbContext _db;
-    private readonly IWebHostEnvironment _env;
+    private readonly IMovieService _movieService;
 
-    public MoviesController(MovieDbContext db, IWebHostEnvironment env)
+    public MoviesController(IMovieService movieService)
     {
-        _db = db;
-        _env = env;
+        _movieService = movieService;
     }
 
     public async Task<IActionResult> Index()
     {
-        var movies = await _db.Movies.AsNoTracking().OrderBy(m => m.Id).ToListAsync();
+        var movies = await _movieService.GetAllAsync();
         return View(movies);
     }
 
@@ -26,7 +23,7 @@ public class MoviesController : Controller
     {
         if (id is null) return NotFound();
 
-        var movie = await _db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+        var movie = await _movieService.GetByIdAsync(id.Value);
         if (movie is null) return NotFound();
 
         return View(movie);
@@ -43,13 +40,7 @@ public class MoviesController : Controller
     {
         if (!ModelState.IsValid) return View(movie);
 
-        if (movie.PosterFile is not null)
-        {
-            movie.PosterPath = await SavePosterFileAsync(movie.PosterFile);
-        }
-
-        _db.Movies.Add(movie);
-        await _db.SaveChangesAsync();
+        await _movieService.CreateAsync(movie);
         return RedirectToAction(nameof(Index));
     }
 
@@ -57,7 +48,7 @@ public class MoviesController : Controller
     {
         if (id is null) return NotFound();
 
-        var movie = await _db.Movies.FindAsync(id);
+        var movie = await _movieService.GetByIdAsync(id.Value);
         if (movie is null) return NotFound();
 
         return View(movie);
@@ -71,21 +62,8 @@ public class MoviesController : Controller
 
         if (!ModelState.IsValid) return View(movie);
 
-        if (movie.PosterFile is not null)
-        {
-            movie.PosterPath = await SavePosterFileAsync(movie.PosterFile);
-        }
-
-        try
-        {
-            _db.Movies.Update(movie);
-            await _db.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await _db.Movies.AnyAsync(m => m.Id == id)) return NotFound();
-            throw;
-        }
+        var updated = await _movieService.UpdateAsync(id, movie);
+        if (!updated) return NotFound();
 
         return RedirectToAction(nameof(Index));
     }
@@ -94,7 +72,7 @@ public class MoviesController : Controller
     {
         if (id is null) return NotFound();
 
-        var movie = await _db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+        var movie = await _movieService.GetByIdAsync(id.Value);
         if (movie is null) return NotFound();
 
         return View(movie);
@@ -104,28 +82,7 @@ public class MoviesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var movie = await _db.Movies.FindAsync(id);
-        if (movie is not null)
-        {
-            _db.Movies.Remove(movie);
-            await _db.SaveChangesAsync();
-        }
-
+        await _movieService.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
-    }
-
-    private async Task<string> SavePosterFileAsync(IFormFile file)
-    {
-        var uploadsDir = Path.Combine(_env.WebRootPath, "images", "posters", "uploads");
-        Directory.CreateDirectory(uploadsDir);
-
-        var extension = Path.GetExtension(file.FileName);
-        var fileName = $"{Guid.NewGuid()}{extension}";
-        var filePath = Path.Combine(uploadsDir, fileName);
-
-        await using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
-
-        return $"/images/posters/uploads/{fileName}";
     }
 }
