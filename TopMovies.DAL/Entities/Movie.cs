@@ -1,9 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
-using TopMovies.Validation;
 
-namespace TopMovies.Models;
+namespace TopMovies.DAL.Entities;
 
 public class Movie
 {
@@ -27,12 +24,10 @@ public class Movie
 
     [Required(ErrorMessage = "Вкажіть рік випуску")]
     [Range(1888, 2100, ErrorMessage = "Рік випуску має бути між 1888 та 2100")]
-    [NotFutureYear]
     [Display(Name = "Рік випуску")]
     public int ReleaseYear { get; set; }
 
     [StringLength(300)]
-    [PosterRequired]
     [Display(Name = "Шлях до постера")]
     public string PosterPath { get; set; } = string.Empty;
 
@@ -40,8 +35,4 @@ public class Movie
     [StringLength(1000, MinimumLength = 10, ErrorMessage = "Опис має бути від 10 до 1000 символів")]
     [Display(Name = "Опис")]
     public string Description { get; set; } = string.Empty;
-
-    [NotMapped]
-    [Display(Name = "Файл постера")]
-    public IFormFile? PosterFile { get; set; }
 }

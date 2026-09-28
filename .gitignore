@@ -3,3 +3,7 @@ obj/
 *.user
 .vs/
 wwwroot/images/posters/uploads/
+
+*.db
+*.db-shm
+*.db-wal

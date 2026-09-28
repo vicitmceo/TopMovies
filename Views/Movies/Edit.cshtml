@@ -1,4 +1,4 @@
-@model TopMovies.Models.Movie
+@model TopMovies.DAL.Entities.Movie
 @{
     ViewData["Title"] = "Редагувати фільм";
 }
@@ -40,8 +40,8 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="PosterFile">Замінити файлом (необов'язково)</label>
-            <input asp-for="PosterFile" class="form-input" type="file" accept="image/*" />
+            <label for="posterFile">Замінити файлом (необов'язково)</label>
+            <input id="posterFile" name="posterFile" class="form-input" type="file" accept="image/*" />
         </div>
 
         <div class="form-group">

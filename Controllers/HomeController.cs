@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TopMovies.Data;
+using TopMovies.DAL.Interfaces;
 using TopMovies.Models;
 
 namespace TopMovies.Controllers;
@@ -9,18 +8,18 @@ namespace TopMovies.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly MovieDbContext _db;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public HomeController(ILogger<HomeController> logger, MovieDbContext db)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
-        _db = db;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IActionResult> Index()
     {
-        var movies = await _db.Movies.AsNoTracking().OrderBy(m => m.Id).ToListAsync();
-        return View(movies);
+        var movies = await _unitOfWork.Movies.GetAllAsync();
+        return View(movies.OrderBy(m => m.Id).ToList());
     }
 
     public IActionResult Privacy()

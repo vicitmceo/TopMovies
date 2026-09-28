@@ -1,22 +1,22 @@
-using Microsoft.EntityFrameworkCore;
-using TopMovies.Data;
-using TopMovies.Extensions;
+using TopMovies.DAL;
+using TopMovies.DAL.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-builder.Services.AddDbContext<MovieDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieDb")));
-builder.Services.AddApplicationServices();
+
+// PL + DAL (без BLL) — Program.cs реєструє DbContext і IUnitOfWork з шару DAL,
+// контролери звертаються до репозиторіїв напряму
+builder.Services.AddDataAccess(builder.Configuration.GetConnectionString("MovieDb"));
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
-    db.Database.Migrate();
+    db.Database.EnsureCreated();
 }
 
 // Configure the HTTP request pipeline.

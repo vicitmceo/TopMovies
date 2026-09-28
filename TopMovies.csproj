@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <ProjectReference Include="TopMovies.DAL\TopMovies.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="TopMovies.DAL\**\*.cs" />
+    <Content Remove="TopMovies.DAL\**\*" />
+    <None Remove="TopMovies.DAL\**\*" />
   </ItemGroup>
 
 </Project>
